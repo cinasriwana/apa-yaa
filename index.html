@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome To 20, Wahda! 🎂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23ff69b4"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'), auto;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #fff5f7 50%, #ffe8f0 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content {
+            max-width: 600px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 50px 40px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.1);
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ff69b4;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #ff85c1;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        p {
+            font-size: 1em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .input-container {
+            margin: 30px 0;
+        }
+
+        input[type="number"] {
+            font-size: 1.5em;
+            padding: 15px 25px;
+            border: 3px solid #ff69b4;
+            border-radius: 15px;
+            text-align: center;
+            width: 150px;
+            background: white;
+            color: #555;
+            font-family: 'Georgia', serif;
+            transition: all 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ff85c1;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 15px 40px;
+            margin: 10px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #ff69b4, #ff85c1);
+            color: white;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 50px rgba(255, 105, 180, 0.3);
+            z-index: 10000;
+            text-align: center;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .notification-emoji {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .notification-text {
+            font-size: 1.3em;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 9999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .heart-decoration {
+            position: absolute;
+            font-size: 2em;
+            opacity: 0.3;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .nav-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            font-size: 28px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 105, 180, 0.25);
+            border: none;
+            color: #ff69b4;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            background: rgba(255, 105, 180, 0.4);
+        }
+
+
+        .photo-section {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4f1 100%);
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(255, 105, 180, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffd6e8 0%, #ffe8f0 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #ff69b4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .photo-caption {
+            margin-top: 25px;
+            font-size: 1.1em;
+            color: #ff69b4;
+            font-style: italic;
+        }
+
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;      /* foto ter-crop rapi */
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            p { font-size: 1em; }
+            .content { padding: 35px 25px; }
+            input[type="number"] { font-size: 1.2em; width: 120px; }
+            button { font-size: 1em; padding: 12px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="confetti"></canvas>
+    <div class="overlay" id="overlay"></div>
+    <div class="notification" id="notification">
+        <div class="notification-emoji" id="notifEmoji"></div>
+        <div class="notification-text" id="notifText"></div>
+        <button onclick="closeNotification()">Next</button>
+    </div>
+
+    <!-- Page 0: Age Input -->
+    <div class="page active" id="page0">
+        <div class="content">
+            <div class="emoji">🎂</div>
+            <h1>Hold on bestie ✋...</h1>
+            <p>Sebelum lanjut, negara ini butuh data umur kamu xixixi~</p>
+            <div class="input-container">
+                <input type="number" id="ageInput" placeholder="20" min="1" max="99">
+            </div>
+            <button onclick="checkAge()">Next</button>
+        </div>
+    </div>
+
+    <!-- Page 1: Opening -->
+    <div class="page" id="page1">
+        <div class="heart-decoration" style="top: 10%; left: 10%;">💕</div>
+        <div class="heart-decoration" style="top: 20%; right: 15%;">🌸</div>
+        <div class="heart-decoration" style="bottom: 15%; left: 20%;">✨</div>
+        <div class="content">
+            <div class="emoji">🎂</div>
+            <h1>Hai kamu...</h1>
+            <p>Ada yang spesial hari ini</p>
+            <p>Aku buatin sesuatu buat kamu</p>
+            <div class="nav-buttons">
+                <button onclick="nextPage()" class="nav-btn">›</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Main Birthday Wish -->
+    <div class="page" id="page2">
+        <div class="content">
+            <div class="emoji">🎉</div>
+            <h2>Happy Birthday, Wahdoyyy!</h2>
+            <p>Semoga hari ini as special as you, yang selalu bikin hari-hari terasa lebih berwarna.</p>
+            <p>Thank you for being a friend who’s always there, who understands without too many explanations, and who makes me laugh at the most random moments.</p>
+            <p>You’re one of the reasons life feels lighter and happier. 💛</p>
+            <div class="nav-buttons">
+                <button onclick="prevPage()" class="nav-btn">‹</button>
+                <button onclick="nextPage()" class="nav-btn">›</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Reflection -->
+    <div class="page" id="page3">
+        <div class="content">
+            <div class="emoji">💌</div>
+            <h2>A few words for you...</h2>
+            <p>Sometimes I think, aku beruntung banget bisa punya teman kayak kamu.</p>
+            <p>I’m sorry if I ever hurt your feelings, or made you lose trust in me.
+                Aku bener-bener seneng punya teman kayak kamu, and I’m grateful that I got to be close to you  (as a friend).
+                Honestly, I miss the closeness we used to have, but I understand that life goes on.</p>
+            <p>Semoga kita tetap berteman terus ya. So grateful to have you as my friend 🫶</p>
+            <div class="nav-buttons">
+                <button onclick="prevPage()" class="nav-btn">‹</button>
+                <button onclick="nextPage()" class="nav-btn">›</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Wishes & Prayers -->
+    <div class="page" id="page4">
+        <div class="content">
+            <div class="emoji">🌸</div>
+            <h2>Prayers for your twenties</h2>
+            <p>Selamat memasuki usia 20 tahun. . .</p>
+            <p>Hope this new year of your life brings you more good things. Semoga kamu selalu dikelilingi orang-orang yang love you, stay healthy, and may all your dreams slowly come true.
+                And most importantly, semoga kamu selalu feel happy and at peace in your everyday life.</p>
+            <p>You truly deserve all the happiness in the world. ✨</p>
+            <div class="nav-buttons">
+                <button onclick="prevPage()" class="nav-btn">‹</button>
+                <button onclick="nextPage()" class="nav-btn">›</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 5: Closing -->
+    <div class="page" id="page5">
+        <div class="content">
+            <div class="emoji">🧸</div>
+            <h2>With love, from your friend</h2>
+            <p>Once again, happy birthday!</p>
+            <p>Semoga hari ini penuh smiles and little things that warm your heart. Thank you for being you. Tetap jadi diri sendiri ya, because you are already enough — more than enough.</p>
+            <p>Love you, always! 💕</p>
+            <div class="nav-buttons">
+                <button onclick="prevPage()" class="nav-btn">‹</button>
+                <button onclick="nextPage()" class="nav-btn">›</button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 6: Photo -->
+    <div class="page photo-section" id="page6">
+        <div style="text-align: center;">
+            <div class="photo-frame">
+                <div class="photo-placeholder">
+                    <img src="us.jpeg" alt="wana dan wahda">
+                </div>
+            </div>
+            <p class="photo-caption">Moments I’ll never forget</p>
+            <div class="nav-buttons">
+                <button onclick="prevPage()" class="nav-btn">‹</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const totalPages = 7;
+
+        // Confetti Animation
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const confettiPieces = [];
+        const colors = ['#ff69b4', '#ffb6c1', '#ffc0cb', '#ff85c1', '#ffd700'];
+
+        class Confetti {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = -10;
+                this.size = Math.random() * 8 + 4;
+                this.speedY = Math.random() * 3 + 2;
+                this.speedX = Math.random() * 2 - 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 4 - 2;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > canvas.height) {
+                    this.y = -10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 80; i++) {
+            confettiPieces.push(new Confetti());
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiPieces.forEach(piece => {
+                piece.update();
+                piece.draw();
+            });
+            requestAnimationFrame(animateConfetti);
+        }
+
+        animateConfetti();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Age Check
+        function checkAge() {
+            const age = parseInt(document.getElementById('ageInput').value);
+            const notif = document.getElementById('notification');
+            const overlay = document.getElementById('overlay');
+            const emoji = document.getElementById('notifEmoji');
+            const text = document.getElementById('notifText');
+
+            if (!age) {
+                emoji.textContent = '🤔';
+                text.textContent = 'Isi dulu dong umurnya~';
+                showNotification(false);
+                return;
+            }
+
+            if (age < 20) {
+                emoji.textContent = '👀';
+                text.textContent = 'Jujur aja dikss, isi yang bener dungss';
+                showNotification(false);
+            } else if (age > 20) {
+                emoji.textContent = '🤨';
+                text.textContent = 'Kamu akselerasi umur kah 🤨';
+                showNotification(false);
+            } else if (age === 20) {
+                emoji.textContent = '🎉';
+                text.textContent = 'YESS! Welcome to your twenties ✨💖';
+                showNotification(true);
+
+                const music = document.getElementById('bgMusic');
+                music.volume = 0.2; // pelan & lembut
+                music.play();
+
+                showNotification(true);
+            }
+        }
+
+        function showNotification(canProceed) {
+            const notif = document.getElementById('notification');
+            const overlay = document.getElementById('overlay');
+            
+            overlay.classList.add('show');
+            notif.classList.add('show');
+
+            if (canProceed) {
+                setTimeout(() => {
+                    closeNotification();
+                    nextPage();
+                }, 2000);
+            }
+        }
+
+        function closeNotification() {
+            document.getElementById('notification').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+        }
+
+        // Navigation
+        function nextPage() {
+            if (currentPage < totalPages - 1) {
+                document.getElementById('page' + currentPage).classList.remove('active');
+                currentPage++;
+                document.getElementById('page' + currentPage).classList.add('active');
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                document.getElementById('page' + currentPage).classList.remove('active');
+                currentPage--;
+                document.getElementById('page' + currentPage).classList.add('active');
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (currentPage === 0) return;
+            
+            if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+    </script>
+</body>
+</html>
